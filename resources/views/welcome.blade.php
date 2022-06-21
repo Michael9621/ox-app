@@ -19,8 +19,10 @@
             </button>
         @endcan
         
-        @can('view-photo')
+        <h1>assigned photos</h1>
+       
             <div class="row " id="photos-list" name="photos-list">
+            @can('view-photo')
                 @if($user->photos->count())
                     @foreach($user->photos as $photo)
                         <div class="col-lg-4 img" id="photo-{{$photo->id}}">
@@ -30,8 +32,20 @@
                 @else
                     <p>no uploaded photos</p>
                 @endif
+
+            @endcan
+                @role('Receiver')
+                    
+                    @foreach($user->mphotos as $photo)
+                        <div class="col-lg-4 img" id="photo-{{$photo->id}}">
+                            <img src="{{asset('./uploads/content/'.$photo->img)}}" alt="">
+                        </div>
+                    @endforeach
+                @endrole
             </div>
-        @endcan
+       
+
+        
     </div>
 
     @can('post-photo')

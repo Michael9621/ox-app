@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/signup', 'UserController@signup')->name('signup');
-Route::post('/register', 'UserController@userRegister')->name('register');
+Route::post('/register', 'UserController@receiverRegister')->name('register');
+
+Route::get('/sender-signup', 'UserController@signupSender')->name('signupSender');
+Route::post('/registerSender', 'UserController@senderRegister')->name('registerSender');
 Route::get('/login', 'UserController@login')->name('login');
 Route::post('/auth', 'UserController@auth')->name('auth');
 Route::post('/logout','UserController@logout')->name('logout');

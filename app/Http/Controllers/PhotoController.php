@@ -23,9 +23,9 @@ class PhotoController extends Controller
   
         $featured = $request->photo;
 
-            $featured_new_name = time().$featured->getClientOriginalName();
+        $featured_new_name = time().$featured->getClientOriginalName();
 
-            $featured->move('uploads/content', $featured_new_name);
+        $featured->move('uploads/content', $featured_new_name);
         //dd(request()->file('photo'));
 
 
@@ -39,9 +39,16 @@ class PhotoController extends Controller
 
 
         $photo->musers()->attach($user);
-    
 
+        $details = [
+            'title' => 'Image sent',
+            'body' => 'An image has been sent to your account kindly log in to view it',
+        ];
+
+        \Mail::to($user->email)->send(new \App\Mail\Image($details));
+        
         return response()->json($photo);
+ 
     }
 
 

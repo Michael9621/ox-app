@@ -28,12 +28,32 @@ class UserController extends Controller
     public function signup(){
         return view('signup');
     }
+
+    public function signupSender(){
+        return view('signupSender');
+    }
     
     /**
      * registers the user (sender)
      * redirects to login page
      */
-    public function userRegister(Request $request){
+    public function receiverRegister(Request $request){
+
+        $role = Role::where('name', 'Receiver')->get();
+
+        $user =  User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $user->assignRole($role);
+
+        return redirect()->route('login');
+    }
+
+
+    public function senderRegister(Request $request){
 
         $role = Role::where('name', 'Sender')->get();
 
