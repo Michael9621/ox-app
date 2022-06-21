@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Photo;
+use App\Status;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+
 
 class UserController extends Controller
 {
@@ -90,6 +92,10 @@ class UserController extends Controller
 
 
     public function logout(){
+        //dd(Auth::user()->name);
+        Status::create([
+            "user_id" => Auth::user()->id
+        ]);
         Auth::logout();
         return redirect()->route('login');
     }

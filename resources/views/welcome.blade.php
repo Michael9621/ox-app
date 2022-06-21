@@ -11,61 +11,65 @@
             </form>     
         </button>
         <p>hello {{$user->name}}</p>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="btn-add">
-            add
-        </button>
-
-        @can('edit articles')
-        //
-        @endcan
-            
-        <div class="row " id="photos-list" name="photos-list">
-            @if($user->photos->count())
-                @foreach($user->photos as $photo)
-                    <div class="col-lg-4 img" id="photo-{{$photo->id}}">
-                        <img src="{{asset('./uploads/content/'.$photo->img)}}" alt="">
-                    </div>
-                @endforeach
-            @else
-                <p>no uploaded photos</p>
-            @endif
-        </div>
-    </div>
-
-    <!-- The Modal -->
-  <div class="modal fade"  id="linkEditorModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title" id="linkEditorModalLabel">Modal Heading</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body">
-
-            <form id="modalFormData" enctype="multipart/form-data" name="modalFormData" class="form-horizontal">
-                <div class="form-group">
-                    <input type="file" name="photo" id="photo" class="form-control">
-                </div>
-            
-                <div class="form-group">
-                    <select name="user_id" id="user_id" class="user_photo"></select>
-                </div>
-
-                <input type="hidden" id="photo_id" name="photo_id" value="0">
-
-                <button class="btn btn-primary" id="btn-save" value="add">save changes</button>
-                
-            </form>
-           
-        </div>
-        
        
-      </div>
+
+        @can('post-photo')
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="btn-add">
+                add
+            </button>
+        @endcan
+        
+        @can('view-photo')
+            <div class="row " id="photos-list" name="photos-list">
+                @if($user->photos->count())
+                    @foreach($user->photos as $photo)
+                        <div class="col-lg-4 img" id="photo-{{$photo->id}}">
+                            <img src="{{asset('./uploads/content/'.$photo->img)}}" alt="">
+                        </div>
+                    @endforeach
+                @else
+                    <p>no uploaded photos</p>
+                @endif
+            </div>
+        @endcan
     </div>
-  </div>
+
+    @can('post-photo')
+    <!-- The Modal -->
+    <div class="modal fade"  id="linkEditorModal" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+        
+            <!-- Modal Header -->
+            <div class="modal-header">
+            <h4 class="modal-title" id="linkEditorModalLabel">Modal Heading</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+
+                <form id="modalFormData" enctype="multipart/form-data" name="modalFormData" class="form-horizontal">
+                    <div class="form-group">
+                        <input type="file" name="photo" id="photo" class="form-control">
+                    </div>
+                
+                    <div class="form-group">
+                        <select name="user_id" id="user_id" class="user_photo"></select>
+                    </div>
+
+                    <input type="hidden" id="photo_id" name="photo_id" value="0">
+
+                    <button class="btn btn-primary" id="btn-save" value="add">save changes</button>
+                    
+                </form>
+            
+            </div>
+            
+        
+        </div>
+        </div>
+    </div>
+    @endcan
 
 @endsection
