@@ -28,5 +28,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/autocomplete','UserController@autocomplete')->name('autocomplete');
     Route::post('/photos', 'PhotoController@create')->name('photos');
     Route::post('/update/{photo}', 'PhotoController@update')->name('update_photo');
+    Route::get('/download/{photo}', 'PhotoController@download')->name('download-photo');
 });
 

@@ -9,16 +9,20 @@ use App\Photo;
 use App\Status;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Validator;
 
 
 class UserController extends Controller
 {
     public function home(){
         $user = Auth::user();
-        //$photos = Photo::latest()->get();
+        //dd($user->mphotos()->latest()->get());
+        $photo_viewed_status = $user->mphotos[0]->pivot->viewed;
+        //dd([$user->status()->latest()->first()->created_at);
         return view('welcome')
-        ->with('user',$user);
-       // ->with('photos', $photos);
+        ->with('user',$user)
+       ->with('photo_viewed_status', $photo_viewed_status)
+       ->with('user_last_logout', $user->status()->latest()->first()->created_at);
     }
 
     
@@ -106,7 +110,7 @@ class UserController extends Controller
         if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect()->route('home');
         } else {
-            dd('your username and password are wrong.');
+            return redirect()->back();
         }
     }
 
