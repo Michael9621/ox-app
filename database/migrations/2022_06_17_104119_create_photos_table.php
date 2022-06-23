@@ -17,6 +17,7 @@ class CreatePhotosTable extends Migration
             $table->id();
             $table->string("img");
             $table->integer("user_id");
+            $table->string('slug');
             $table->timestamps();
             $table->softDeletes();
         });

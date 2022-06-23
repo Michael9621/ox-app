@@ -7,6 +7,7 @@ use App\Photo;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
  
 
 class PhotoController extends Controller
@@ -19,14 +20,14 @@ class PhotoController extends Controller
         ]);*/
         $validator = \Validator::make($request->all(), [
             'photo' => 'required|image',
-            'user_id' => 'required',
+            'user' => 'required',
         ]);
 
        
 
         if ($validator->passes()) {
             
-            $user = User::find($request->user_id);
+            $user = User::find($request->user);
             
             $featured = $request->photo;
 
@@ -37,6 +38,7 @@ class PhotoController extends Controller
             
             $photo = Photo::create([
                 "img" => $featured_new_name,
+                'slug' => Str::slug($featured_new_name, '-'),
                 "user_id" => Auth::user()->id
             ]);
 

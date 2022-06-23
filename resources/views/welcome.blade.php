@@ -66,6 +66,9 @@
                                                     $user->status()->where('type',0)->orderBy('created_at', 'DESC')->first()->created_at
                                                 )
                                                     <span class="badge badge-pill badge-success">viewed</span>
+                                                @else
+                                                    <span class="badge badge-pill badge-danger">not viewed</span>
+                                                
                                           
                                                 @endif
                                     
@@ -114,7 +117,7 @@
                            <div>
                                <img src="{{asset('./uploads/content/'.$photo->img)}}" alt="">
                                <div>
-                                   <a href="{{route('download-photo', ['photo' => $photo->id])}}">Download image</a>
+                                   <a href="{{route('download-photo', ['photo' => $photo->slug])}}">Download image</a>
                                    <p><b>Date posted : </b> {{$photo->created_at->toFormattedDateString()}}</p>
                                </div>
                            </div>
@@ -157,7 +160,7 @@
                     </div>
                 
                     <div class="form-group">
-                        <select name="user_id" id="user_id" class="user_photo"></select>
+                        <select name="user" id="user" class="user_photo"></select>
                         <span class="text-danger p-1" id="user_id_error"></span>
                     </div>
 

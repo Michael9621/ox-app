@@ -43,7 +43,7 @@ class User extends Authenticatable
     }
 
     public function mphotos(){
-        return $this->belongsToMany('App\Photo', 'photo_user','user_test_id', 'photo_test_id')->withPivot('viewed');
+        return $this->belongsToMany('App\Photo', 'photo_user','user_test_id', 'photo_test_id');
     }
 
     public function status(){

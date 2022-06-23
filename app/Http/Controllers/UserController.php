@@ -16,18 +16,10 @@ class UserController extends Controller
 {
     public function home(){
         $user = Auth::user();
-        //dd($user->mphotos()->latest()->get());
-   
-        //dd([$user->status()->latest()->first()->created_at);
-        $user_last_logout='';
-        //dd($user->photos()->count() );
-        if($user->status()->count() > 0){
-            $user_last_logout= $user->status()->latest()->first()->created_at;
-        }
         
         return view('welcome')
-        ->with('user',$user)
-        ->with('user_last_logout', $user_last_logout);
+        ->with('user',$user);
+  
     }
 
     

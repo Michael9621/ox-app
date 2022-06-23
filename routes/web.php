@@ -17,6 +17,8 @@ Route::post('/register', 'UserController@receiverRegister')->name('register');
 
 Route::get('/sender-signup', 'UserController@signupSender')->name('signupSender');
 Route::post('/registerSender', 'UserController@senderRegister')->name('registerSender');
+
+
 Route::get('/login', 'UserController@login')->name('login');
 Route::post('/auth', 'UserController@auth')->name('auth');
 Route::post('/logout','UserController@logout')->name('logout');
@@ -28,6 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/autocomplete','UserController@autocomplete')->name('autocomplete');
     Route::post('/photos', 'PhotoController@create')->name('photos');
     Route::post('/update/{photo}', 'PhotoController@update')->name('update_photo');
-    Route::get('/download/{photo}', 'PhotoController@download')->name('download-photo');
+    Route::get('/download/{photo:slug}', 'PhotoController@download')->name('download-photo');
 });
 
