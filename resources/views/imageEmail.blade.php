@@ -10,7 +10,7 @@
 <body>
     <h1>{{ $details['title'] }}</h1>
     <p>{{ $details['body'] }}</p>
-    <a class="btn btn-primary" href="test.php">click this link</a>
+    
    
     <p>Thank you</p>
 </body>

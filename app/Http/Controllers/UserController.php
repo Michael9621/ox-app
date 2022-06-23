@@ -17,12 +17,17 @@ class UserController extends Controller
     public function home(){
         $user = Auth::user();
         //dd($user->mphotos()->latest()->get());
-        $photo_viewed_status = $user->mphotos[0]->pivot->viewed;
+   
         //dd([$user->status()->latest()->first()->created_at);
+        $user_last_logout='';
+        //dd($user->photos()->count() );
+        if($user->status()->count() > 0){
+            $user_last_logout= $user->status()->latest()->first()->created_at;
+        }
+        
         return view('welcome')
         ->with('user',$user)
-       ->with('photo_viewed_status', $photo_viewed_status)
-       ->with('user_last_logout', $user->status()->latest()->first()->created_at);
+        ->with('user_last_logout', $user_last_logout);
     }
 
     
@@ -45,6 +50,12 @@ class UserController extends Controller
 
         $role = Role::where('name', 'Receiver')->get();
 
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique',
+            'password' => 'required|confirmed|min:6',
+        ]);
+
         $user =  User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -60,6 +71,12 @@ class UserController extends Controller
     public function senderRegister(Request $request){
 
         $role = Role::where('name', 'Sender')->get();
+
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique',
+            'password' => 'required|confirmed|min:6',
+        ]);
 
         $user =  User::create([
             'name' => $request->name,
@@ -80,7 +97,7 @@ class UserController extends Controller
 
         if($request->has('q')){
             $search = $request->q;
-            $data =User::select("id","name")
+            $data =User::role('Receiver')->select("id","name")
                     ->where("name", "!=", Auth::user()->name)
             		->where('name','LIKE',"%$search%")
             		->get();
@@ -108,19 +125,32 @@ class UserController extends Controller
             'password' => 'required',
         ]);
         if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+            if (Auth::user()->hasRole('Receiver')){
+                Status::create([
+                    "user_id" => Auth::user()->id,
+                    "type"=> 0
+                ]);
+            }
             return redirect()->route('home');
         } else {
-            return redirect()->back();
+            $loginError="your login credentials are incorrect";
+            return redirect('login')->with('loginError', 'login credentials are incorrect');;
         }
     }
 
 
     public function logout(){
         //dd(Auth::user()->name);
-        Status::create([
-            "user_id" => Auth::user()->id
-        ]);
+
+        if (Auth::user()->hasRole('Receiver')){
+            Status::create([
+                "user_id" => Auth::user()->id,
+                "type" => 1
+            ]);
+        }
+
         Auth::logout();
+       
         return redirect()->route('login');
     }
 

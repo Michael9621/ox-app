@@ -17,7 +17,6 @@ class CreatePhotoUserTable extends Migration
             $table->id();
             $table->integer('photo_test_id');
             $table->integer('user_test_id');
-            $table->boolean('viewed')->default(0);
             $table->timestamps();
         });
     }

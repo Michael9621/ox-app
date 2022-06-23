@@ -152,3 +152,9 @@ img{
   padding: 2rem;
   box-shadow: var(--shadow-black-100);
 }
+
+.receiver-header{
+  color:black; 
+  font-weight:bold; 
+  margin-bottom:.5rem;
+}

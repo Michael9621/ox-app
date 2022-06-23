@@ -25,6 +25,7 @@ class PhotoController extends Controller
        
 
         if ($validator->passes()) {
+            
             $user = User::find($request->user_id);
             
             $featured = $request->photo;

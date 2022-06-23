@@ -13,22 +13,29 @@
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="enter your name" name="name">
                         </div>
+                        @error('name')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
 
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="enter your email address" name="email">
                         </div>
+                        @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
 
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="enter password" name="password">
+                            <input type="password" class="form-control" placeholder="enter password" name="password">
                         </div>
+                        @error('password')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
 
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="confrim password" name="password">
+                            <input type="password" class="form-control" placeholder="confrim password" name="password_confirmation">
                         </div>
 
                         <button class="btn btn-primary">register</button>
-
-                        
 
                         @csrf
                      </form>

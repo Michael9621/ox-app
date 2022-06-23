@@ -8,6 +8,7 @@
             <div class="col-lg-6">
                 <div class="card-2">
                     <h4>login</h4>
+                 
                      <form action="{{ route('auth') }}" method="POST" >
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="email" name="email">

@@ -42,8 +42,11 @@ jQuery(document).ready(function($){
             
             
           
-            $('#btn-save').html('Sending..');
+            $('#btn-save').html('Sending email..');
             var formData = new FormData(this);
+
+          
+      
 
             console.log(formData)
             $.ajax({
@@ -64,7 +67,17 @@ jQuery(document).ready(function($){
                         $('#user_id_error').html(data.error[1]);
                         
                     }else{
-                        location.reload()
+                        
+                         
+                        jQuery('#linkEditorModal').modal('hide');
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Image uploaded & mail sent',
+                          })
+
+                        location.reload();
                     }
                     
                     
