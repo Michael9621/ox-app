@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Photo;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
  
 
 class PhotoController extends Controller
@@ -16,32 +17,44 @@ class PhotoController extends Controller
         /*$request->validate([
             'img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);*/
+        $validator = \Validator::make($request->all(), [
+            'photo' => 'required|image',
+            'user_id' => 'required',
+        ]);
 
-        $user = User::find($request->user_id);
-        
-        //dd(User::find($request->user_id));
-  
-        $featured = $request->photo;
+       
+
+        if ($validator->passes()) {
+            
+            $user = User::find($request->user_id);
+            
+            $featured = $request->photo;
 
             $featured_new_name = time().$featured->getClientOriginalName();
 
             $featured->move('uploads/content', $featured_new_name);
-        //dd(request()->file('photo'));
+            //dd(request()->file('photo'));
+            
+            $photo = Photo::create([
+                "img" => $featured_new_name,
+                "user_id" => Auth::user()->id
+            ]);
 
 
-        
+            $photo->musers()->attach($user);
 
-        
-        $photo = Photo::create([
-            "img" => $featured_new_name,
-            "user_id" => Auth::user()->id
-        ]);
+            $details = [
+                'title' => 'Image sent',
+                'body' => 'An image has been sent to your account kindly log in to view it',
+            ];
 
+            \Mail::to($user->email)->send(new \App\Mail\Image($details));
+            
+            return response()->json($photo);
+        }
 
-        $photo->musers()->attach($user);
-    
-
-        return response()->json($photo);
+        return response()->json(['error'=>$validator->errors()->all()]);
+ 
     }
 
 
@@ -68,5 +81,11 @@ class PhotoController extends Controller
         
         // Force deleting all related models...
         $photo->history()->forceDelete();
+    }
+
+    public function download(Photo $photo){
+        $path=public_path().'/uploads/content/'.$photo->img;
+        
+        return \Response::download($path);
     }
 }

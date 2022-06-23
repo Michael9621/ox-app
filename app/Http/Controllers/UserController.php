@@ -9,16 +9,25 @@ use App\Photo;
 use App\Status;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Validator;
 
 
 class UserController extends Controller
 {
     public function home(){
         $user = Auth::user();
-        //$photos = Photo::latest()->get();
+        //dd($user->mphotos()->latest()->get());
+   
+        //dd([$user->status()->latest()->first()->created_at);
+        $user_last_logout='';
+        //dd($user->photos()->count() );
+        if($user->status()->count() > 0){
+            $user_last_logout= $user->status()->latest()->first()->created_at;
+        }
+        
         return view('welcome')
-        ->with('user',$user);
-       // ->with('photos', $photos);
+        ->with('user',$user)
+        ->with('user_last_logout', $user_last_logout);
     }
 
     
@@ -28,14 +37,46 @@ class UserController extends Controller
     public function signup(){
         return view('signup');
     }
+
+    public function signupSender(){
+        return view('signupSender');
+    }
     
     /**
      * registers the user (sender)
      * redirects to login page
      */
-    public function userRegister(Request $request){
+    public function receiverRegister(Request $request){
+
+        $role = Role::where('name', 'Receiver')->get();
+
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique',
+            'password' => 'required|confirmed|min:6',
+        ]);
+
+        $user =  User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $user->assignRole($role);
+
+        return redirect()->route('login');
+    }
+
+
+    public function senderRegister(Request $request){
 
         $role = Role::where('name', 'Sender')->get();
+
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique',
+            'password' => 'required|confirmed|min:6',
+        ]);
 
         $user =  User::create([
             'name' => $request->name,
@@ -56,7 +97,7 @@ class UserController extends Controller
 
         if($request->has('q')){
             $search = $request->q;
-            $data =User::select("id","name")
+            $data =User::role('Receiver')->select("id","name")
                     ->where("name", "!=", Auth::user()->name)
             		->where('name','LIKE',"%$search%")
             		->get();
@@ -84,19 +125,32 @@ class UserController extends Controller
             'password' => 'required',
         ]);
         if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+            if (Auth::user()->hasRole('Receiver')){
+                Status::create([
+                    "user_id" => Auth::user()->id,
+                    "type"=> 0
+                ]);
+            }
             return redirect()->route('home');
         } else {
-            dd('your username and password are wrong.');
+            $loginError="your login credentials are incorrect";
+            return redirect('login')->with('loginError', 'login credentials are incorrect');;
         }
     }
 
 
     public function logout(){
         //dd(Auth::user()->name);
-        Status::create([
-            "user_id" => Auth::user()->id
-        ]);
+
+        if (Auth::user()->hasRole('Receiver')){
+            Status::create([
+                "user_id" => Auth::user()->id,
+                "type" => 1
+            ]);
+        }
+
         Auth::logout();
+       
         return redirect()->route('login');
     }
 

@@ -12,12 +12,17 @@ jQuery(document).ready(function($){
         3. open modal
     */
     jQuery('#btn-add').click(function () {
+        $('#btn-save').html('Upload photo');
         jQuery('#btn-save').val("add");
         jQuery('#modalFormData').trigger("reset");
         //reset user photo
         $('.user_photo').val('').trigger('change');
         jQuery('#linkEditorModal').modal('show');
         jQuery('#linkEditorModalLabel').html('upload photo');
+
+        //reset errors
+        $('#photo_error').html('');
+        $('#user_id_error').html('');
     });
 
 
@@ -37,8 +42,11 @@ jQuery(document).ready(function($){
             
             
           
-            $('#btn-save').html('Sending..');
+            $('#btn-save').html('Sending email..');
             var formData = new FormData(this);
+
+          
+      
 
             console.log(formData)
             $.ajax({
@@ -51,13 +59,36 @@ jQuery(document).ready(function($){
                 processData: false,
                 success: function (data) {
                   
-                    location.reload()
+
+                    //console.log(data.error);
+                    if(data.error){
+                        console.log(data.error[0]);
+                        $('#photo_error').html(data.error[0]);
+                        $('#user_id_error').html(data.error[1]);
+                        
+                    }else{
+                        
+                         
+                        jQuery('#linkEditorModal').modal('hide');
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Image uploaded & mail sent',
+                          })
+
+                        location.reload();
+                    }
+                    
+                    
                     
                   
                 },
                 error: function (data) {
-                    console.log('Error:', data);
-                    $('#section-save').html('error');
+                    if (data.status == 422) { // when status code is 422, it's a validation issue
+                        console.log(data);
+                    }
+                    
                 }
                 
             });        

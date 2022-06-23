@@ -143,10 +143,18 @@ img{
 
 .select2-container .select2-selection--single  {
   height: 40px !important;
+  display: inline-block;
+  width: 100%;
 }
 
 .card-2{
   border-radius: .5rem;
   padding: 2rem;
   box-shadow: var(--shadow-black-100);
+}
+
+.receiver-header{
+  color:black; 
+  font-weight:bold; 
+  margin-bottom:.5rem;
 }

@@ -8,7 +8,7 @@
             <div class="col-lg-6">
                 <div class="card-2">
                     <h4>register</h4>
-                     <form action="{{ route('register') }}" method="POST" >
+                     <form action="{{ route('registerSender') }}" method="POST" >
 
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="enter your name" name="name">
@@ -36,8 +36,6 @@
                         </div>
 
                         <button class="btn btn-primary">register</button>
-
-                        
 
                         @csrf
                      </form>

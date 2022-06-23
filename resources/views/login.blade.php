@@ -8,14 +8,21 @@
             <div class="col-lg-6">
                 <div class="card-2">
                     <h4>login</h4>
+                 
                      <form action="{{ route('auth') }}" method="POST" >
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="email" name="email">
                         </div>
+                        @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
 
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="password" name="password">
+                            <input type="password" class="form-control" placeholder="password" name="password">
                         </div>
+                        @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
 
                         <button class="btn btn-primary">login</button>
 
